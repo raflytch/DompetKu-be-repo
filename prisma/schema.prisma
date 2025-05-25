@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model representing user accounts in the system
+model User {
+  id        String   @id @default(cuid()) // CUID for user identification
+  fullName  String // User's full name
+  email     String   @unique // Email address as unique identifier
+  password  String? // Hashed password
+  balance   Decimal  @default(0) @db.Decimal(12, 2) // Main account balance with 2 decimal places
+  savings   Decimal  @default(0) @db.Decimal(12, 2) // Savings account balance with 2 decimal places
+  createdAt DateTime @default(now()) // When the user was created
+  updatedAt DateTime @updatedAt // When the user was last updated
+
+  // Relations
+  transactions Transaction[] // One-to-many relation to transactions
+  categories   Category[] // One-to-many relation to categories
+
+  @@map("users")
+}
+
+// Enum for transaction types to maintain consistency
+enum TransactionType {
+  INCOME // Money coming in
+  EXPENSE // Money going out
+  SAVING // Transfer to savings
+  WITHDRAW_SAVING // Transfer from savings to main balance
+}
+
+// Transaction model representing financial transactions
+model Transaction {
+  id        String          @id @default(uuid()) // UUID for transaction identification
+  title     String // Transaction title/description
+  amount    Decimal         @db.Decimal(12, 2) // Transaction amount with 2 decimal places
+  type      TransactionType // Type of transaction using the enum
+  date      DateTime        @default(now()) // When the transaction occurred
+  createdAt DateTime        @default(now()) // When the transaction was recorded
+  updatedAt DateTime        @updatedAt // When the transaction was last updated
+
+  // Relations
+  userId String // Foreign key to User
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  categoryId String? // Optional relation to Category
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  @@map("transactions")
+}
+
+// Category model for transaction categorization
+model Category {
+  id        String   @id @default(uuid()) // UUID for category identification
+  name      String // Category name (e.g., "Food", "Transport")
+  createdAt DateTime @default(now()) // When the category was created
+  updatedAt DateTime @updatedAt // When the category was last updated
+
+  // Relations
+  userId String // Foreign key to User
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  transactions Transaction[] // One-to-many relation to transactions
+
+  @@unique([name, userId]) // Ensure category names are unique per user
+  @@map("categories")
+}
