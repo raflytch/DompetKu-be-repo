@@ -5,8 +5,9 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  // Welcome endpoint
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  getWelcome(): { message: string; status: string; timestamp: string } {
+    return this.appService.getWelcome();
   }
 }
