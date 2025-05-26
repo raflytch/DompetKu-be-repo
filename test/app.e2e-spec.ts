@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import request from 'supertest';
 import { App } from 'supertest/types';
-import { AppModule } from './../src/app.module';
+import { AppModule } from 'src/app/app.module';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
@@ -20,6 +21,10 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
-      .expect('Hello World!');
+      .expect({
+        message: 'Welcome to DompetKu API',
+        status: 'success',
+        timestamp: expect.any(String),
+      });
   });
 });
