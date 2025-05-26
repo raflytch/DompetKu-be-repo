@@ -31,4 +31,26 @@ export class EnvironmentService {
   get jwtExpiresIn(): string {
     return this.configService.get<string>('JWT_EXPIRES_IN') || '1d';
   }
+
+  // File upload configuration
+  get imageKitPublicKey(): string {
+    return this.configService.get<string>('IMAGEKIT_PUBLIC_KEY') || '';
+  }
+
+  get imageKitPrivateKey(): string {
+    return this.configService.get<string>('IMAGEKIT_PRIVATE_KEY') || '';
+  }
+
+  get imageKitUrlEndpoint(): string {
+    return this.configService.get<string>('IMAGEKIT_URL_ENDPOINT') || '';
+  }
+
+  // Google OAuth configuration
+  get googleClientId(): string {
+    return this.configService.get<string>('GOOGLE_CLIENT_ID') || '';
+  }
+
+  get googleClientSecret(): string {
+    return this.configService.get<string>('GOOGLE_CLIENT_SECRET') || '';
+  }
 }

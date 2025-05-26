@@ -2,11 +2,10 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-  // Return welcome message with status and timestamp
-  getWelcome(): { message: string; status: string; timestamp: string } {
+  getWelcome() {
     return {
-      message: 'Welcome to DompetKu API',
-      status: 'success',
+      app: 'DompetKu API',
+      version: '1.0.0',
       timestamp: new Date().toISOString(),
     };
   }
